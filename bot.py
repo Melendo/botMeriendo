@@ -21,13 +21,24 @@ bot = commands.Bot(command_prefix=prefix, intents=intents)
 async def on_ready():
     print('We have logged in as {0}'.format(bot.user))
 
+
 #Funcion de saludar al usuario que ejecuta el comano
-@bot.command(name='hola', help='Saluda al usuario')
+@bot.command(name='hola', help='Saluda al usuario', category='Basico')
 async def saludar(ctx):
     await ctx.send(f'Hola {ctx.author.mention}!')
 
+@bot.event
+async def on_member_join(member):
+    # Aquí podrías enviar un mensaje de bienvenida personalizado
+    await member.send(f'Bienvenido al server {member.name}, bonito nombre por cierto!')
+
+@bot.event
+async def on_member_remove(member):
+    # Aquí podrías enviar un mensaje de despedida personalizado
+    await bot.get_channel(762326170799702016).send(f'{member.name} se ha ido a mi mi mi zzz... zzz... zzz...')
+
 #Funcion de busqueda en google que devuelve el primer enlace
-@bot.command(name='buscar', help='Busca en google y te devuelve la primera búsqueda')
+@bot.command(name='buscar', help='Busca en google y te devuelve la primera búsqueda', category='Utilidad')
 async def buscar(ctx, *, query):
     url = f"https://www.google.com/search?q={query}"
     headers = {
@@ -51,16 +62,18 @@ async def buscar(ctx, *, query):
         await ctx.send("Error al realizar la búsqueda.")
 
 #Funcion para devolver el rango en 2s de rocket league
-@bot.command(name='rangoRL', help='introduciendo id epic devuelve el rango en 2s')
+@bot.command(name='rangoRL', help='introduciendo id epic devuelve el rango en 2s', category='Utilidad')
 
 async def rangoRL(ctx, *, query):
-    url = f"https://rocketleague.tracker.network/rocket-league/profile/epic/{query}/overview"
+    url = f"https://api.tracker.gg/api/v2/rocket-league/standard/profile/epic/{query}/sessions?"
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.1 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.1 Safari/537.36",
+        "TRN-Api-Key": "c7d94c85-e536-479e-a775-f100438c41ed"
     }
 
     response = requests.get(url, headers=headers)
 
+    print(response.status_code)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
         result = soup.find('main').text
