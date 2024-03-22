@@ -6,24 +6,23 @@ import os
 import scrapy
 from bs4 import BeautifulSoup
 
+#Conseguir token de un .env
 load_dotenv(".env")
-
 TOKEN = os.getenv("TOKEN")
 
+#Configuracion del bot y cliente
 prefix = "!"
 intents = discord.Intents.default()
 intents.message_content = True
-client = discord.Client(intents=intents)
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
 #Mensaje login por terminal
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0}'.format(bot.user))
 
 #Funcion de saludar al usuario que ejecuta el comano
 @bot.command(name='hola', help='Saluda al usuario')
-
 async def saludar(ctx):
     await ctx.send(f'Hola {ctx.author.mention}!')
 
