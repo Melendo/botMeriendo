@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 #Conseguir token de un .env
 load_dotenv(".env")
 TOKEN = os.getenv("TOKEN")
+TRGGKEY = os.getenv("TRGGKEY")
 
 #Configuracion del bot y cliente
 descripcion = "Bot todopoderoso hijo de Odin y hermano de Prometeo"
@@ -17,9 +18,11 @@ intents = discord.Intents.all()
 intents.message_content = True
 bot = commands.Bot(command_prefix=prefix, intents=intents, description = descripcion)
 
+#<<<<<<<<<<<<<<<<<<<<<<<<<<EVENTOS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+#Analizamos mensaje y se procesan los comandos
 @bot.event
 async def on_message(message):
-    # do some extra stuff here
     if message.author == bot.user:
         return
     
@@ -33,24 +36,29 @@ async def on_message(message):
 async def on_ready():
     print('We have logged in as {0}'.format(bot.user))
 
+#Mensaje privado al unirse
 @bot.event
 async def on_member_join(member):
     await member.send(f'Bienvenido al server {member.name}, bonito nombre por cierto!')
 
+#Mensaje en el server de quien se ha ido
 @bot.event
 async def on_member_remove(member):
     await bot.get_channel(762326170799702016).send(f'{member.name} se ha ido a mi mi mi zzz... zzz... zzz...')
 
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<COMANDOS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    
+#Comando ping
 @bot.command(name='ping' , help='pong?', category='Basico')
 async def pingpong(ctx):
     await ctx.send('pong')
 
-#Funcion de saludar al usuario que ejecuta el comano
+#Comando de saludar al usuario
 @bot.command(name='hola', help='Saluda al usuario', category='Basico')
 async def saludar(ctx):
     await ctx.send(f'Hola {ctx.author.mention}!')
 
-#Funcion de busqueda en google que devuelve el primer enlace
+#Comando busqueda en google
 @bot.command(name='buscar', help='Busca en google y te devuelve la primera búsqueda', category='Utilidad')
 async def buscar(ctx, *, query):
     url = f"https://www.google.com/search?q={query}"
@@ -74,13 +82,13 @@ async def buscar(ctx, *, query):
     else:
         await ctx.send("Error al realizar la búsqueda.")
 
-#Funcion para devolver el rango en 2s de rocket league
+#Comando devuelve stats de Rocket League
 @bot.command(name='rangoRL', help='introduciendo id epic devuelve el rango en 2s', category='Utilidad')
 
 async def rangoRL(ctx, *, query):
     url = f"https://public-api.tracker.gg/v2/rocket-league/standard/profile/epic/{query}/sessions?"
     headers = {
-        "TRN-Api-Key": "c7d94c85-e536-479e-a775-f100438c41ed"
+        "TRN-Api-Key": TRGGKEY
     }
 
     response = requests.get(url, headers=headers)
