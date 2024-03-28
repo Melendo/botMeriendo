@@ -3,16 +3,15 @@ from discord.ext import commands
 import requests
 from dotenv import load_dotenv
 import os
-import scrapy
 from bs4 import BeautifulSoup
 
-#Conseguir token de un .env
 load_dotenv(".env")
 TOKEN = os.getenv("TOKEN")
 TRGGKEY = os.getenv("TRGGKEY")
+print("Cargado token bot")
 
-#Configuracion del bot y cliente
-descripcion = "Bot todopoderoso hijo de Odin y hermano de Prometeo"
+#Configuracion del cliente "bot"
+descripcion = "Bot todopoderoso hijo de Melendo y hermano de Meriendo"
 prefix = "!"
 intents = discord.Intents.all()
 intents.message_content = True
@@ -31,7 +30,7 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-#Mensaje login por terminal
+#Mensaje login del bot por terminal
 @bot.event
 async def on_ready():
     print('We have logged in as {0}'.format(bot.user))
